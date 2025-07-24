@@ -20,7 +20,7 @@ VALUES (
     $1,
     $2
 )
-RETURNING id, created_at, updated_at, body, user_id
+RETURNING id, body, user_id, created_at, updated_at
 `
 
 type CreateChirpParams struct {
@@ -33,10 +33,10 @@ func (q *Queries) CreateChirp(ctx context.Context, arg CreateChirpParams) (Chirp
 	var i Chirp
 	err := row.Scan(
 		&i.ID,
-		&i.CreatedAt,
-		&i.UpdatedAt,
 		&i.Body,
 		&i.UserID,
+		&i.CreatedAt,
+		&i.UpdatedAt,
 	)
 	return i, err
 }
@@ -51,7 +51,7 @@ func (q *Queries) DeleteChirp(ctx context.Context, id uuid.UUID) error {
 }
 
 const getAllChirps = `-- name: GetAllChirps :many
-SELECT id, created_at, updated_at, body, user_id FROM chirps
+SELECT id, body, user_id, created_at, updated_at FROM chirps
 `
 
 func (q *Queries) GetAllChirps(ctx context.Context) ([]Chirp, error) {
@@ -65,10 +65,10 @@ func (q *Queries) GetAllChirps(ctx context.Context) ([]Chirp, error) {
 		var i Chirp
 		if err := rows.Scan(
 			&i.ID,
-			&i.CreatedAt,
-			&i.UpdatedAt,
 			&i.Body,
 			&i.UserID,
+			&i.CreatedAt,
+			&i.UpdatedAt,
 		); err != nil {
 			return nil, err
 		}
@@ -84,7 +84,7 @@ func (q *Queries) GetAllChirps(ctx context.Context) ([]Chirp, error) {
 }
 
 const getChirp = `-- name: GetChirp :one
-SELECT id, created_at, updated_at, body, user_id FROM chirps WHERE chirps.id = $1
+SELECT id, body, user_id, created_at, updated_at FROM chirps WHERE chirps.id = $1
 `
 
 func (q *Queries) GetChirp(ctx context.Context, id uuid.UUID) (Chirp, error) {
@@ -92,10 +92,10 @@ func (q *Queries) GetChirp(ctx context.Context, id uuid.UUID) (Chirp, error) {
 	var i Chirp
 	err := row.Scan(
 		&i.ID,
-		&i.CreatedAt,
-		&i.UpdatedAt,
 		&i.Body,
 		&i.UserID,
+		&i.CreatedAt,
+		&i.UpdatedAt,
 	)
 	return i, err
 }
